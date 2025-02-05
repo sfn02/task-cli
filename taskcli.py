@@ -1,6 +1,7 @@
 import datetime
 import json
 import argparse
+from tabulate import tabulate
 
 current_id = 1
 
@@ -97,7 +98,6 @@ def update_task(id, description):
 
 def mark_in_progress(id):
     tasks = load_data()  
-    print(tasks)
     for tsk in tasks:
         if tsk["id"] == id:
             task = Task(**tsk) 
@@ -118,7 +118,6 @@ def mark_done(id):
             tsk['status'] = task.status
             tsk['updatedAt'] = task.updatedAt
             save_data(tasks) 
-            print(tsk) 
             print(f"Task with ID {id} marked as done.")
             return 
     print(f"Task with ID {id} not found.")  
@@ -136,14 +135,19 @@ def delete_task(id):
 
 def list_task(status):
     tasks = load_data()
+    output = []
     for tsk in tasks:
         if tsk['status'] == status:
-            print(tsk)
+            output.append(tsk)
+    print(
+        tabulate(output, headers="keys")
+    )
 
 def list_all():
     tasks = load_data()
-    for tsk in tasks:
-        print(tsk)
+    print(
+        tabulate(tasks, headers="keys")
+    )
 
 def main():
     global tasks
